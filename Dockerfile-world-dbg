@@ -1,0 +1,17 @@
+FROM ubuntu:19.10
+
+ENV LC_ALL=C.UTF-8
+ENV LANG=C.UTF-8
+
+RUN apt update
+RUN apt dist-upgrade -y
+RUN apt install -y libmariadb3 libssl libreadline5 zlib1g \
+    libncurses5 libbz2-1.0 libpthread-workqueue0 libace-6.4.5 pkg-config \
+    mariadb-client gdb
+
+ADD bin/worldserver /tc/bin/worldserver
+
+WORKDIR /tc/bin
+
+VOLUME ["/tc/core"]
+CMD ["gdb", "/tc/bin/worldserver", "/tc/core/core.worldserver"]

@@ -5,16 +5,22 @@ ENV LANG=C.UTF-8
 
 RUN apt update
 RUN apt dist-upgrade -y
-RUN apt install -y libmariadb3 libssl libreadline5 zlib1g \
-    libncurses5 libbz2-1.0 libpthread-workqueue0 libace-6.4.5 pkg-config \
-    mariadb-client python3 python3-pip supervisor net-tools
+RUN apt install -y libmariadb3 libssl1.1 libreadline5 zlib1g \
+    libncurses5 libbz2-1.0 libpthread-workqueue0 pkg-config \
+    mariadb-client python3 python3-pip supervisor net-tools \
+    libboost-system1.67.0 libboost-filesystem1.67.0 libboost-thread1.67.0 \
+    libboost-program-options1.67.0 libboost-iostreams1.67.0
 RUN pip3 install flask gunicorn
+
+RUN ln -s /lib/x86_64-linux-gnu/ /usr/lib64
+RUN ln -s /lib/x86_64-linux-gnu/librt.so.1 /lib64/
 
 RUN mkdir -p /tc/logs
 RUN mkdir -p /tc/data
 RUN mkdir -p /tc/bin
 
 ADD bin/worldserver /tc/bin
+ADD sql /tc/sql
 ADD scripts/misc/world_metrics.py /tc/bin
 ADD image/supervisord.conf /tc/supervisord.conf
 
